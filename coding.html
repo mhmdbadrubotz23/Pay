@@ -1,0 +1,206 @@
+<!--
+--  Uploaded on : https://haxor.my.id/open/pembayaran.html
+--  Official Web : https://prinsh.com
+--  script-deface-generator.prinsh.com
+-->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Payment Gateway</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: url('https://files.catbox.moe/ro3n60.jpg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: white;
+      animation: fadeIn 1.2s ease;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .spinner {
+      border: 6px solid rgba(255, 255, 255, 0.3); 
+      border-top: 6px solid #007BFF; 
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      font-size: 24px;
+      margin-bottom: 20px;
+      font-weight: bold;
+      color: white;
+    }
+
+    .container {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 30px 25px;
+      border-radius: 15px;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 25px;
+    }
+
+    .label {
+      font-size: 16px;
+      margin-top: 15px;
+      color: #ffffff;
+      font-weight: bold;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      margin: 8px 0 16px 0;
+      padding: 14px;
+      font-size: 18px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      background-color: #0056b3;
+    }
+
+    .qris-container {
+      margin-top: 20px;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 0.7s ease;
+    }
+
+    .qris-container.active {
+      max-height: 500px;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .qris-container img {
+      width: 100%;
+      max-width: 250px;
+      border-radius: 12px;
+      margin-top: 10px;
+      animation: grow 0.7s ease;
+    }
+
+    @keyframes grow {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .instruction {
+      margin-top: 30px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #ffffff;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    #loading {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="loading">
+    <div class="loading-text">Loading....</div>
+    <div class="spinner"></div>
+  </div>
+
+  <div class="container hidden">
+    <h1>𝑺𝑰𝑳𝑨𝑯𝑲𝑨𝑵 𝑷𝑰𝑳𝑰𝑯 𝑷𝑬𝑴𝑩𝑨𝒀𝑨𝑹𝑨𝑵</h1>
+
+    <div class="label">𝖢𝗅𝗂𝖼𝗄 𝖧𝖾𝗋𝖾</div>
+    <button onclick="copyText(this)" data-nomer="082258041628">𝑫𝑨𝑵𝑨</button> 
+
+    <div class="label">𝖢𝗅𝗂𝖼𝗄 𝖧𝖾𝗋𝖾</div>
+    <button onclick="copyText(this)" data-nomer="108690856243">Bank Jago</button>
+
+    <div class="label">𝖢𝗅𝗂𝖼𝗄 𝖧𝖾𝗋𝖾</div>
+    <button onclick="copyText(this)" data-nomer="082258041628">𝑮𝑶𝑷𝑨𝒀</button>
+
+    <div class="label">𝖢𝗅𝗂𝖼𝗄 𝖧𝖾𝗋𝖾</div>
+    <button onclick="toggleQR()">𝑸𝑹𝑰𝑺</button>
+
+    <div id="qris" class="qris-container">
+      <img src="https://files.catbox.moe/pzr76s.jpg" alt="QRIS">
+    </div>
+
+    <div class="instruction">
+      𝑱𝑨𝑵𝑮𝑨𝑵 𝑳𝑼𝑷𝑨 𝑲𝑰𝑹𝑰𝑴 𝑩𝑼𝑲𝑻𝑰 𝑻𝑹𝑨𝑵𝑺𝑭𝑬𝑹 𝑲𝑬 𝑨𝑫𝑴𝑰𝑵
+      WhatsApp : 0822-5804-1628
+    </div>
+  </div>
+
+  <script>
+    function copyText(button) {
+      const nomor = button.getAttribute('data-nomer');
+      navigator.clipboard.writeText(nomor)
+        .then(() => {
+          alert('Nomor berhasil disalin ke clipboard!');
+        })
+        .catch(err => {
+          alert('Gagal menyalin: ' + err);
+        });
+    }
+
+    let qrisVisible = false;
+    function toggleQR() {
+      const qris = document.getElementById('qris');
+      qris.classList.toggle('active');
+      qrisVisible = !qrisVisible;
+    }
+
+    window.onload = function() {
+      setTimeout(function() {
+        document.getElementById('loading').style.display = 'none';
+        document.querySelector('.container').style.opacity = 1;
+      }, 2000);
+    };
+  </script>
+</body>
+</html>
