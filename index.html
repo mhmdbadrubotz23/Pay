@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>支払い息子ストア</title>
+    <title>Badru Store</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -208,7 +208,39 @@
     <div class="fixed top-20 -left-20 w-40 h-40 rounded-full bg-blue-100 opacity-30 blur-3xl -z-10"></div>
     <div class="fixed bottom-10 -right-20 w-60 h-60 rounded-full bg-purple-100 opacity-30 blur-3xl -z-10"></div>
     
-    
+    <!-- Modal Peringatan -->
+    <div id="warningModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-70">
+        <div class="ios-card warning-modal w-full max-w-md relative overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-red-500 to-yellow-500"></div>
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-exclamation-triangle text-red-500"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold">Peringatan Keamanan</h2>
+                            <p class="text-gray-600 text-sm">Informasi penting</p>
+                        </div>
+                    </div>
+                    <button onclick="hideWarning()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="bg-red-50 rounded-xl p-4 mb-6">
+                    <p class="text-red-800 font-medium">
+                        <i class="fas fa-shield-alt mr-2"></i> Hati-hati terhadap penipuan.
+                    </p>
+                    <p class="text-gray-700 mt-2 text-sm">
+                        Satu-satunya website pembayaran resmi adalah <span class="font-bold">Drubotzstore.com</span> 
+                        Jangan percaya website lain yang mengatasnamakan kami Terimakasih.
+                    </p>
+                </div>
+                </div>
+                <button onclick="hideWarning()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl font-medium transition duration-400">
+                    Saya Mengerti
+                </button>
             </div>
         </div>
     </div>
@@ -420,40 +452,4 @@
                     <a href="https://t.me/mhmdbadru23" target="_blank" class="contact-item ios-card p-3 flex items-center space-x-3">
                         <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
                             <i class="fab fa-telegram text-blue-600 text-xl"></i>
-                        </div>
-                        <div>
-                            <p class="font-medium">Telegram</p>
-                            <p class="text-gray-500 text-sm">@Mhmdbadru23</p>
-                        </div>
-                    </a>
-                    
-                    <a href="https://tiktok.com/@mhmdbadru23botz" target="_blank" class="contact-item ios-card p-3 flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-black bg-opacity-10 rounded-full flex items-center justify-center">
-                            <i class="fab fa-tiktok text-black text-xl"></i>
-                        </div>
-                        <div>
-                            <p class="font-medium">TikTok</p>
-                            <p class="text-gray-500 text-sm">@Mhmdbadru23</p>
-                        </div>
-                    </a>
-                </div>
-                
-                <button onclick="hideContactModal()" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 rounded-xl font-medium transition duration-200">
-                    Tutup
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal Keluhan -->
-    <div id="complaintModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-black bg-opacity-40 blur-bg" onclick="hideComplaintModal()"></div>
-        <div class="ios-card modal w-full max-w-md relative overflow-hidden">
-            <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-orange-500 to-red-500"></div>
-            <div class="p-6">
-                <div class="flex justify-between items-start mb-6">
-                    <div>
-                        <h2 class="text-xl font-bold mb-1">Formulir Keluhan</h2>
-                        <p class="text-gray-600 text-sm">Kami akan membantu menyelesaikan masalah Anda</p>
-                    </div>
-                    <button onclick="hideComplaint
+                     
