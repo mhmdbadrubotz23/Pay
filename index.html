@@ -1,206 +1,456 @@
 <!--
---  Uploaded on : https://haxor.my.id/open/pembayaran.html
+--  Uploaded on : https://haxor.my.id/open/paymentt.html
 --  Official Web : https://prinsh.com
 --  script-deface-generator.prinsh.com
 -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Payment Gateway</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Arial', sans-serif;
-      background: url('https://files.catbox.moe/ro3n60.jpg') no-repeat center center fixed;
-      background-size: cover;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      color: white;
-      animation: fadeIn 1.2s ease;
-      text-align: center;
-      overflow: hidden;
-    }
-
-    .spinner {
-      border: 6px solid rgba(255, 255, 255, 0.3); 
-      border-top: 6px solid #007BFF; 
-      border-radius: 50%;
-      width: 80px;
-      height: 80px;
-      animation: spin 1s linear infinite;
-      margin: 20px auto;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .loading-text {
-      font-size: 24px;
-      margin-bottom: 20px;
-      font-weight: bold;
-      color: white;
-    }
-
-    .container {
-      background: rgba(0, 0, 0, 0.6);
-      padding: 30px 25px;
-      border-radius: 15px;
-      text-align: center;
-      max-width: 400px;
-      width: 90%;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(4px);
-      opacity: 0;
-      transition: opacity 1s ease-in-out;
-    }
-
-    h1 {
-      font-size: 28px;
-      margin-bottom: 25px;
-    }
-
-    .label {
-      font-size: 16px;
-      margin-top: 15px;
-      color: #ffffff;
-      font-weight: bold;
-    }
-
-    button {
-      display: block;
-      width: 100%;
-      margin: 8px 0 16px 0;
-      padding: 14px;
-      font-size: 18px;
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    button:hover {
-      transform: scale(1.05);
-      background-color: #0056b3;
-    }
-
-    .qris-container {
-      margin-top: 20px;
-      max-height: 0;
-      overflow: hidden;
-      opacity: 0;
-      transform: translateY(-20px);
-      transition: all 0.7s ease;
-    }
-
-    .qris-container.active {
-      max-height: 500px;
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .qris-container img {
-      width: 100%;
-      max-width: 250px;
-      border-radius: 12px;
-      margin-top: 10px;
-      animation: grow 0.7s ease;
-    }
-
-    @keyframes grow {
-      0% { transform: scale(0.8); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    .instruction {
-      margin-top: 30px;
-      font-size: 18px;
-      font-weight: bold;
-      color: #ffffff;
-    }
-
-    @keyframes fadeIn {
-      0% { opacity: 0; transform: translateY(-30px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-
-    #loading {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>支払い息子ストア</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --ios-bg: #f2f2f7;
+            --ios-card: #ffffff;
+            --ios-primary: #007aff;
+            --ios-secondary: #8e8e93;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--ios-bg);
+            color: #1c1c1e;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .ios-card {
+            background: var(--ios-card);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        .payment-method {
+            transition: all 0.2s ease;
+            transform: scale(1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .payment-method:hover {
+            transform: scale(0.98);
+        }
+        
+        .payment-method:active {
+            transform: scale(0.95);
+        }
+        
+        .modal {
+            animation: modalFadeIn 0.4s cubic-bezier(0.36, 0.66, 0.04, 1);
+        }
+        
+        /* Animasi buat modal muncul kayak ngambang dari bawah */
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .bounce {
+            animation: bounce 2s infinite;
+        }
+        
+        /* Animasi buat icon lompat-lompat kayak bola */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Animasi buat elemen ngezoom pelan-pelan */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .floating {
+            animation: floating 6s ease-in-out infinite;
+        }
+        
+        /* Animasi buat elemen ngambang kayak di air */
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        .blur-bg {
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+        }
+        
+        .qr-code {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .highlight {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            width: 100%;
+            height: 30%;
+            background-color: rgba(0, 122, 255, 0.2);
+            z-index: -1;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+        
+        .highlight:hover::after {
+            transform: scaleX(1);
+        }
+        
+        .text-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 122, 255, 0.9);
+            color: white;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 12px;
+            pointer-events: none;
+        }
+        
+        .payment-method:hover .text-animation {
+            opacity: 1;
+        }
+        
+        .warning-modal {
+            animation: warningFadeIn 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        
+        /* Animasi buat modal peringatan muncul kayak meletus */
+        @keyframes warningFadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .contact-item {
+            transition: all 0.2s ease;
+        }
+        
+        .contact-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .complaint-input {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .complaint-input:focus {
+            border-bottom-color: #007aff;
+        }
+        
+        .file-input-label {
+            transition: all 0.3s ease;
+        }
+        
+        .file-input-label:hover {
+            background-color: #f3f4f6;
+        }
+        
+        .file-preview {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        
+        .file-preview.show {
+            max-height: 200px;
+        }
+        
+        .payment-header {
+            animation: headerGlow 3s infinite alternate;
+        }
+        
+        /* Animasi buat header kayak ada cahaya kelap-kelip */
+        @keyframes headerGlow {
+            0% { box-shadow: 0 0 0 0 rgba(0, 122, 255, 0.4); }
+            100% { box-shadow: 0 0 0 10px rgba(0, 122, 255, 0); }
+        }
+    </style>
 </head>
-<body>
-  <div id="loading">
-    <div class="loading-text">Loading....</div>
-    <div class="spinner"></div>
-  </div>
-
-  <div class="container hidden">
-    <h1>𝑺𝑰𝑳𝑨𝑯𝑲𝑨𝑵 𝑷𝑰𝑳𝑰𝑯 𝑷𝑬𝑴𝑩𝑨𝒀𝑨𝑹𝑨𝑵</h1>
-
-    <div class="label">𝖢𝗅𝗂𝖼𝗄 𝖧𝖾𝗋𝖾</div>
-    <button onclick="copyText(this)" data-nomer="082258041628">𝑫𝑨𝑵𝑨</button> 
-
-    <div class="label">𝖢𝗅𝗂𝖼𝗄 𝖧𝖾𝗋𝖾</div>
-    <button onclick="copyText(this)" data-nomer="108690856243">Bank Jago</button>
-
-    <div class="label">𝖢𝗅𝗂𝖼𝗄 𝖧𝖾𝗋𝖾</div>
-    <button onclick="copyText(this)" data-nomer="082258041628">𝑮𝑶𝑷𝑨𝒀</button>
-
-    <div class="label">𝖢𝗅𝗂𝖼𝗄 𝖧𝖾𝗋𝖾</div>
-    <button onclick="toggleQR()">𝑸𝑹𝑰𝑺</button>
-
-    <div id="qris" class="qris-container">
-      <img src="https://files.catbox.moe/pzr76s.jpg" alt="QRIS">
+<body class="relative">
+    <!-- Elemen dekoratif ngambang -->
+    <div class="fixed top-20 -left-20 w-40 h-40 rounded-full bg-blue-100 opacity-30 blur-3xl -z-10"></div>
+    <div class="fixed bottom-10 -right-20 w-60 h-60 rounded-full bg-purple-100 opacity-30 blur-3xl -z-10"></div>
+    
+    <!-- Modal Peringatan -->
+    <div id="warningModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-70">
+        <div class="ios-card warning-modal w-full max-w-md relative overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-red-500 to-yellow-500"></div>
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-exclamation-triangle text-red-500"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold">Peringatan Keamanan</h2>
+                            <p class="text-gray-600 text-sm">Informasi penting</p>
+                        </div>
+                    </div>
+                    <button onclick="hideWarning()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="bg-red-50 rounded-xl p-4 mb-6">
+                    <p class="text-red-800 font-medium">
+                        <i class="fas fa-shield-alt mr-2"></i> Hati-hati terhadap penipuan.
+                    </p>
+                    <p class="text-gray-700 mt-2 text-sm">
+                        Satu-satunya website pembayaran resmi adalah <span class="font-bold">Mhmdbadru23.com</span> 
+                        Jangan percaya website lain yang mengatasnamakan kami.
+                    </p>
+                </div>
+                
+                <button onclick="hideWarning()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl font-medium transition duration-200">
+                    Saya Mengerti
+                </button>
+            </div>
+        </div>
     </div>
-
-    <div class="instruction">
-      𝑱𝑨𝑵𝑮𝑨𝑵 𝑳𝑼𝑷𝑨 𝑲𝑰𝑹𝑰𝑴 𝑩𝑼𝑲𝑻𝑰 𝑻𝑹𝑨𝑵𝑺𝑭𝑬𝑹 𝑲𝑬 𝑨𝑫𝑴𝑰𝑵
-      WhatsApp : 0822-5804-1628
+    
+    <!-- Konten Utama -->
+    <div class="container mx-auto px-5 py-10 max-w-2xl">
+        <!-- Header Pembayaran dengan Animasi -->
+        <div class="ios-card payment-header p-4 mb-8 text-center border border-blue-200">
+            <div class="flex items-center justify-center space-x-2">
+                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                    <i class="fas fa-bolt text-white"></i>
+                </div>
+                <span class="font-bold text-blue-600 text-lg">PEMBAYARAN RESMI BADRU STORE</span>
+            </div>
+        </div>
+        
+        <!-- Header -->
+        <header class="mb-12 text-center">
+            <div class="floating inline-block mb-6">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg">
+                    <i class="fas fa-wallet text-white text-2xl"></i>
+                </div>
+            </div>
+            <h1 class="text-3xl font-bold mb-2">Metode Pembayaran</h1>
+            <p class="text-gray-600">Pilih metode pembayaran yang Anda inginkan</p>
+        </header>
+        
+        <!-- Grid Metode Pembayaran -->
+        <div class="grid grid-cols-2 gap-4 mb-12">
+            <!-- Dana -->
+            <div class="ios-card payment-method p-4" onclick="showPaymentDetail('DANA', 'Muhamad Badru Wasih', '082258041628')">
+                <div class="flex flex-col items-center">
+                    <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center mb-3">
+                        <img src="https://files.catbox.moe/mjgxuf.jpg" alt="DANA" class="w-10">
+                    </div>
+                    <span class="font-medium text-gray-900">DANA</span>
+                </div>
+                <div class="text-animation">Muhamad Badru Wasih</div>
+            </div>
+            
+            <!-- GoPay -->
+            <div class="ios-card payment-method p-4" onclick="showPaymentDetail('GoPay', 'Muhamad Badru Wasih', '082258041628')">
+                <div class="flex flex-col items-center">
+                    <div class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center mb-3">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/8/86/Gopay_logo.svg" alt="GoPay" class="w-10">
+                    </div>
+                    <span class="font-medium text-gray-900">GoPay</span>
+                </div>
+                <div class="text-animation">Muhamad Badru Wasih</div>
+            </div>
+            
+            <!-- OVO -->
+            <div class="ios-card payment-method p-4" onclick="showPaymentDetail('OVO', 'Muhamad Badru Wasih', '082258041628')">
+                <div class="flex flex-col items-center">
+                    <div class="w-14 h-14 bg-purple-50 rounded-xl flex items-center justify-center mb-3">
+                        <img src="https://files.catbox.moe/rtcsbc.png" alt="OVO" class="w-10">
+                    </div>
+                    <span class="font-medium text-gray-900">OVO</span>
+                </div>
+                <div class="text-animation">Muhamad Badru Wasih</div>
+            </div>
+            
+            <!-- Gojek -->
+            <div class="ios-card payment-method p-4" onclick="showPaymentDetail('Gojek', 'Muhamad Badru Wasih', '082258041628')">
+                <div class="flex flex-col items-center">
+                    <div class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center mb-3">
+                        <img src="https://files.catbox.moe/alu8e5.png" alt="Gojek" class="w-10">
+                    </div>
+                    <span class="font-medium text-gray-900">Gojek</span>
+                </div>
+                <div class="text-animation">Muhamad Badru Wasih</div>
+            </div>
+            
+            <!-- QRIS -->
+            <div class="ios-card payment-method p-4 col-span-2" onclick="showQRISDetail()">
+                <div class="flex flex-col items-center">
+                    <div class="w-14 h-14 bg-yellow-50 rounded-xl flex items-center justify-center mb-3">
+                        <img src="https://files.catbox.moe/9hcose.webp" alt="QRIS" class="w-10">
+                    </div>
+                    <span class="font-medium text-gray-900">QRIS</span>
+                    <span class="text-xs text-gray-500 mt-1">Scan untuk membayar</span>
+                </div>
+                <div class="text-animation">Muhamad Badru Wasih</div>
+            </div>
+        </div>
+        
+        <!-- Tombol Kontak & Keluhan -->
+        <div class="flex space-x-4 mb-12">
+            <button onclick="showContactModal()" class="flex-1 ios-card py-3 px-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium rounded-xl hover:opacity-90 transition">
+                <i class="fas fa-phone-alt mr-2"></i> Hubungi Kami
+            </button>
+            <button onclick="showComplaintModal()" class="flex-1 ios-card py-3 px-4 bg-gradient-to-r from-orange-500 to-red-500 text-white font-medium rounded-xl hover:opacity-90 transition">
+                <i class="fas fa-exclamation-circle mr-2"></i> Buat Keluhan
+            </button>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="text-center text-gray-500 text-sm">
+            <p>© 2025 <span class="highlight font-medium">Mhmdbadru23</span>. Seluruh hak dilindungi.</p>
+        </footer>
     </div>
-  </div>
-
-  <script>
-    function copyText(button) {
-      const nomor = button.getAttribute('data-nomer');
-      navigator.clipboard.writeText(nomor)
-        .then(() => {
-          alert('Nomor berhasil disalin ke clipboard!');
-        })
-        .catch(err => {
-          alert('Gagal menyalin: ' + err);
-        });
-    }
-
-    let qrisVisible = false;
-    function toggleQR() {
-      const qris = document.getElementById('qris');
-      qris.classList.toggle('active');
-      qrisVisible = !qrisVisible;
-    }
-
-    window.onload = function() {
-      setTimeout(function() {
-        document.getElementById('loading').style.display = 'none';
-        document.querySelector('.container').style.opacity = 1;
-      }, 2000);
-    };
-  </script>
-</body>
-</html>
+    
+    <!-- Modal Detail Pembayaran -->
+    <div id="paymentModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black bg-opacity-40 blur-bg" onclick="hideModal()"></div>
+        <div class="ios-card modal w-full max-w-sm relative overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-blue-500 to-purple-500"></div>
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h2 id="paymentMethod" class="text-xl font-bold mb-1">DANA</h2>
+                        <p class="text-gray-600 text-sm">Detail pembayaran</p>
+                    </div>
+                    <button onclick="hideModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="bg-gray-50 rounded-xl p-4 mb-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-gray-600">Nama Akun</span>
+                        <span id="accountName" class="font-medium">Mhmdbadru23</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-600">Nomor Akun</span>
+                        <span id="accountNumber" class="font-mono font-bold text-blue-600">082258041628</span>
+                    </div>
+                </div>
+                
+                <button onclick="copyToClipboard()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl font-medium transition duration-200 flex items-center justify-center space-x-2">
+                    <i class="far fa-copy"></i>
+                    <span>Salin Nomor</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Detail QRIS -->
+    <div id="qrisModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black bg-opacity-40 blur-bg" onclick="hideModal()"></div>
+        <div class="ios-card modal w-full max-w-xs relative overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-yellow-500 to-orange-500"></div>
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h2 class="text-xl font-bold mb-1">QRIS</h2>
+                        <p class="text-gray-600 text-sm">Scan untuk membayar</p>
+                    </div>
+                    <button onclick="hideModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="flex flex-col items-center mb-6">
+                    <div class="qr-code bg-white p-4 rounded-lg mb-4">
+                        <img src="https://files.catbox.moe/2pctr3.jpg" alt="QR Code" class="w-40 h-40">
+                    </div>
+                    <div class="text-center">
+                        <p class="font-mediumgt text-gray-900">Mhmdbadru23</p>
+                        <p class="text-sm text-gray-600 mt-1">Valid untuk semua aplikasi QRIS</p>
+                    </div>
+                </div>
+                
+                <button onclick="downloadQR()" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-3 rounded-xl font-medium transition duration-200 flex items-center justify-center space-x-2">
+                    <i class="fas fa-download"></i>
+                    <span>Simpan QR Code</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Kontak -->
+    <div id="contactModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black bg-opacity-40 blur-bg" onclick="hideContactModal()"></div>
+        <div class="ios-card modal w-full max-w-sm relative overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-green-500 to-blue-500"></div>
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h2 class="text-xl font-bold mb-1">Hubungi Kami</h2>
+                        <p class="text-gray-600 text-sm">Kontak resmi kami</p>
+                    </div>
+                    <button onclick="hideContactModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="space-y-3 mb-6">
+                    <a href="https://wa.me/6282258041628" target="_blank" class="contact-item ios-card p-3 flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                            <i class="fab fa-whatsapp text-green-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium">WhatsApp</p>
+                            <p class="text-gray-500 text-sm">+62 822 5804 1628</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://instagram.com/mhmdbadru23" target="_blank" class="contact-item ios-card p-3 flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center">
+                            <i class="fab fa-instagram text-pink-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium">Instagram</p>
+                            <p class="text-gray-500 text-sm">@Mhmdbadru23</p>
+                        </div>
+                    </a>
+                    
+                    <a href="https://t.me/mhmdbadru23" target="_blank" class="contact-item ios-card p-3 flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i class="fab fa-telegram text-blue-600 text-xl"></i>
+                        </div>
+         
